@@ -20,7 +20,7 @@ for i in data:
                     "verse": verse_num + 1
                 })
 
-json_string = json.dumps(words)
+json_string = json.dumps(words, sort_keys=True)
 print("Produced JSON:\n", json_string)
 print("Number of words:", len(words.keys()))
 with open("words.json", "w") as out:
