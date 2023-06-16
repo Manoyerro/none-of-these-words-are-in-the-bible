@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run tests
-        run: cargo test --verbose
+        run: cargo test
         working-directory: ./api
 
   lint:
