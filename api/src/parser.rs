@@ -1,11 +1,11 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct WordInfo {
-    book: String,
-    chapter: u8,
-    verse: u8,
+    pub book: String,
+    pub chapter: u8,
+    pub verse: u8,
 }
 
 pub fn get_file_as_map() -> HashMap<String, Vec<WordInfo>> {
