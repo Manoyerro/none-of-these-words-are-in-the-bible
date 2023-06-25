@@ -1,12 +1,5 @@
-use serde::{Deserialize, Serialize};
+use crate::models::wordinfo::WordInfo;
 use std::collections::HashMap;
-
-#[derive(Deserialize, Serialize)]
-pub struct WordInfo {
-    pub book: String,
-    pub chapter: u8,
-    pub verse: u8,
-}
 
 pub fn get_file_as_map() -> HashMap<String, Vec<WordInfo>> {
     let words_string = std::fs::read_to_string("assets/words.json").expect("Words file not found");
