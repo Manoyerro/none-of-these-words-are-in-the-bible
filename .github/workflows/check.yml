@@ -1,0 +1,22 @@
+name: Lint and test
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run tests
+        run: cargo test
+        working-directory: ./api
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run lint
+        run: cargo fmt
+        working-directory: ./api
