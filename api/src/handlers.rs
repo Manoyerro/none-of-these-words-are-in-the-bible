@@ -12,7 +12,6 @@ pub async fn get_frequency(words: Json<Words>) -> HttpResponse {
     let split_words = words.words.split(" ");
     let word_freq: Vec<Option<ReturnInfo>> =
         split_words.map(|word| lookup(&bible_words, word)).collect();
-
     HttpResponse::Ok().json(word_freq)
 }
 
@@ -20,10 +19,9 @@ fn lookup<'a>(
     bible_words: &'a HashMap<String, Vec<WordInfo>>,
     word: &str,
 ) -> Option<ReturnInfo<'a>> {
-    let found_word_info = bible_words.get(word);
-    match found_word_info {
-        Some(info) => Some(ReturnInfo {
-            matches: Vec::from_iter(info.iter()),
+    match bible_words.get(word) {
+        Some(found_word_info) => Some(ReturnInfo {
+            matches: Vec::from_iter(found_word_info.iter()),
         }),
         None => None,
     }
