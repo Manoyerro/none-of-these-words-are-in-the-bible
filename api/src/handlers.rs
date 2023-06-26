@@ -1,18 +1,23 @@
+use crate::models::returninfo::ReturnInfo;
 use crate::models::wordinfo::WordInfo;
 use crate::models::words::Words;
+use crate::parser::get_file_as_map;
 use actix_web::web;
-use actix_web::{post, web::Json, HttpResponse};
+use actix_web::{web::Json, HttpResponse};
 
 pub async fn get_frequency(words: Json<Words>) -> HttpResponse {
-    let mut word_freq: Vec<WordInfo> = Vec::new();
-    let split_words: Vec<&str> = words.words.split(" ").collect();
+    // TODO: See if we can move this to a static location
+    let bible_words = get_file_as_map();
+    let mut word_freq: Vec<ReturnInfo> = Vec::new();
+    let split_words = words.words.split(" ");
     for word in split_words {
-        // Compute the frequency and details and such
-        word_freq.push(WordInfo {
-            book: word.to_string(),
-            chapter: 1,
-            verse: 1,
-        })
+        let found_word_info = bible_words.get(word);
+        if found_word_info.is_some() {
+            // Create return info from found word
+            word_freq.push(ReturnInfo {
+                matches: Vec::from_iter(found_word_info.unwrap().iter()),
+            });
+        }
     }
     HttpResponse::Ok().json(word_freq)
 }
