@@ -10,8 +10,11 @@ pub async fn get_frequency(words: Json<Words>) -> HttpResponse {
     // TODO: See if we can move this to a static location
     let bible_words = get_file_as_map();
     let split_words = words.words.split(" ");
-    let word_freq: Vec<Option<ReturnInfo>> =
-        split_words.map(|word| lookup(&bible_words, word)).collect();
+    let word_freq: Vec<ReturnInfo> = split_words
+        .map(|word| lookup(&bible_words, word))
+        .filter(|item| item.is_some())
+        .map(|item| item.unwrap())
+        .collect();
     HttpResponse::Ok().json(word_freq)
 }
 
