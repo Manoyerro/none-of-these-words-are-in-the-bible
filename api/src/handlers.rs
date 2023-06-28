@@ -31,7 +31,7 @@ fn lookup<'a>(
 }
 
 pub fn config(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::scope("/api").route("/test", web::post().to(get_frequency)));
+    cfg.service(web::scope("/api").route("/lookup", web::post().to(get_frequency)));
 }
 
 #[cfg(test)]
