@@ -4,25 +4,23 @@ use crate::models::words::Words;
 use crate::parser::get_file_as_map;
 use actix_web::web;
 use actix_web::{web::Json, HttpResponse};
+use once_cell::sync::Lazy;
 use std::collections::HashMap;
 
+static BIBLE_WORDS: Lazy<HashMap<String, Vec<WordInfo>>> = Lazy::new(|| get_file_as_map());
+
 pub async fn get_frequency(words: Json<Words>) -> HttpResponse {
-    // TODO: See if we can move this to a static location
-    let bible_words = get_file_as_map();
     let split_words = words.words.split(" ");
     let word_freq: Vec<ReturnInfo> = split_words
-        .map(|word| lookup(&bible_words, word))
+        .map(|word| lookup(word))
         .filter(|item| item.is_some())
         .map(|item| item.unwrap())
         .collect();
     HttpResponse::Ok().json(word_freq)
 }
 
-fn lookup<'a>(
-    bible_words: &'a HashMap<String, Vec<WordInfo>>,
-    word: &str,
-) -> Option<ReturnInfo<'a>> {
-    match bible_words.get(word) {
+fn lookup<'a>(word: &str) -> Option<ReturnInfo<'a>> {
+    match BIBLE_WORDS.get(word) {
         Some(found_word_info) => Some(ReturnInfo {
             matches: Vec::from_iter(found_word_info.iter()),
         }),
