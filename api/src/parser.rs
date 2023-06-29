@@ -13,6 +13,6 @@ mod tests {
     #[test]
     fn get_file_as_map_returns_file() {
         let map = get_file_as_map();
-        assert_eq!(map.len(), 13493)
+        assert_eq!(map.len(), 13399)
     }
 }
