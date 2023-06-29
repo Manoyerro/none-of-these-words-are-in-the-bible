@@ -11,7 +11,7 @@ for i in data:
     for chapter_num, chapter in enumerate(i["chapters"]):
         for verse_num, verse in enumerate(chapter):
             for word in verse.split(" "):
-                word = re.sub(sanitise_regex, "", word.title())
+                word = re.sub(sanitise_regex, "", word.lower())
                 if word not in words.keys():
                     words[word] = []
                 words[word].append({
