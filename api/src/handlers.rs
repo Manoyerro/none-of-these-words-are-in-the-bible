@@ -6,23 +6,26 @@ use actix_web::web;
 use actix_web::{web::Json, HttpResponse};
 use once_cell::sync::Lazy;
 use std::collections::HashMap;
+use unicode_segmentation::UnicodeSegmentation;
 
 static BIBLE_WORDS: Lazy<HashMap<String, Vec<WordInfo>>> = Lazy::new(|| get_file_as_map());
 
 pub async fn get_frequency(words: Json<Words>) -> HttpResponse {
-    let split_words = words.words.split_whitespace();
+    let split_words = words.words.unicode_word_indices();
     let word_freq: Vec<ReturnInfo> = split_words
-        .map(|word| lookup(&word.to_lowercase()))
+        .map(|(index, word)| lookup(index, &word.to_lowercase()))
         .filter(|item| item.is_some())
         .map(|item| item.unwrap())
         .collect();
     HttpResponse::Ok().json(word_freq)
 }
 
-fn lookup<'a>(word: &str) -> Option<ReturnInfo<'a>> {
+fn lookup<'a>(index: usize, word: &str) -> Option<ReturnInfo<'a>> {
     match BIBLE_WORDS.get(word) {
         Some(found_word_info) => Some(ReturnInfo {
             matches: Vec::from_iter(found_word_info.iter()),
+            start_pos: index,
+            end_pos: index + word.len() - 1,
         }),
         None => None,
     }
@@ -36,11 +39,13 @@ pub fn config(cfg: &mut web::ServiceConfig) {
 mod tests {
 
     use super::*;
+    use actix_web::body::BoxBody;
     use actix_web::{
         body::to_bytes,
         http::{self},
     };
-    use serde_json::json;
+    use assert_json_diff::assert_json_eq;
+    use serde_json::{json, Value};
     use std::str::from_utf8;
 
     #[actix_web::test]
@@ -61,9 +66,8 @@ mod tests {
         let expected_output: Vec<ReturnInfo> = Vec::new();
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
-        let byte_body = to_bytes(resp.into_body()).await.unwrap();
-        let string_body = from_utf8(&byte_body).unwrap();
-        assert_eq!(string_body, json!(expected_output).to_string())
+        let actual = response_to_json_value(resp).await;
+        assert_json_eq!(actual, json!(expected_output))
     }
 
     #[actix_web::test]
@@ -78,13 +82,14 @@ mod tests {
             verse: 3,
         };
         let expected_output: Vec<ReturnInfo> = vec![ReturnInfo {
+            start_pos: 0,
+            end_pos: 3,
             matches: vec![&expected_info],
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
-        let byte_body = to_bytes(resp.into_body()).await.unwrap();
-        let string_body = from_utf8(&byte_body).unwrap();
-        assert_eq!(string_body, json!(expected_output).to_string())
+        let actual = response_to_json_value(resp).await;
+        assert_json_eq!(actual, json!(expected_output))
     }
 
     #[actix_web::test]
@@ -99,17 +104,20 @@ mod tests {
         };
         let expected_output: Vec<ReturnInfo> = vec![
             ReturnInfo {
+                start_pos: 0,
+                end_pos: 3,
                 matches: vec![&expected_info],
             },
             ReturnInfo {
+                start_pos: 5,
+                end_pos: 8,
                 matches: vec![&expected_info],
             },
         ];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
-        let byte_body = to_bytes(resp.into_body()).await.unwrap();
-        let string_body = from_utf8(&byte_body).unwrap();
-        assert_eq!(string_body, json!(expected_output).to_string())
+        let actual = response_to_json_value(resp).await;
+        assert_json_eq!(actual, json!(expected_output))
     }
 
     #[actix_web::test]
@@ -123,13 +131,14 @@ mod tests {
             verse: 3,
         };
         let expected_output: Vec<ReturnInfo> = vec![ReturnInfo {
+            start_pos: 0,
+            end_pos: 3,
             matches: vec![&expected_info],
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
-        let byte_body = to_bytes(resp.into_body()).await.unwrap();
-        let string_body = from_utf8(&byte_body).unwrap();
-        assert_eq!(string_body, json!(expected_output).to_string())
+        let actual = response_to_json_value(resp).await;
+        assert_json_eq!(actual, json!(expected_output))
     }
 
     #[actix_web::test]
@@ -143,13 +152,14 @@ mod tests {
             verse: 3,
         };
         let expected_output: Vec<ReturnInfo> = vec![ReturnInfo {
+            start_pos: 0,
+            end_pos: 3,
             matches: vec![&expected_info],
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
-        let byte_body = to_bytes(resp.into_body()).await.unwrap();
-        let string_body = from_utf8(&byte_body).unwrap();
-        assert_eq!(string_body, json!(expected_output).to_string())
+        let actual = response_to_json_value(resp).await;
+        assert_json_eq!(actual, json!(expected_output))
     }
 
     #[actix_web::test]
@@ -163,12 +173,19 @@ mod tests {
             verse: 3,
         };
         let expected_output: Vec<ReturnInfo> = vec![ReturnInfo {
+            start_pos: 0,
+            end_pos: 3,
             matches: vec![&expected_info],
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
+        let actual = response_to_json_value(resp).await;
+        assert_json_eq!(actual, json!(expected_output))
+    }
+
+    async fn response_to_json_value(resp: HttpResponse) -> Value {
         let byte_body = to_bytes(resp.into_body()).await.unwrap();
         let string_body = from_utf8(&byte_body).unwrap();
-        assert_eq!(string_body, json!(expected_output).to_string())
+        serde_json::from_str(string_body).unwrap()
     }
 }
