@@ -23,9 +23,9 @@ pub async fn get_frequency(words: Json<Words>) -> HttpResponse {
 fn lookup<'a>(index: usize, word: &str) -> Option<ReturnInfo<'a>> {
     match BIBLE_WORDS.get(word) {
         Some(found_word_info) => Some(ReturnInfo {
-            matches: Vec::from_iter(found_word_info.iter()),
             start_pos: index,
             end_pos: index + word.len() - 1,
+            matches: Vec::from_iter(found_word_info.iter()),
         }),
         None => None,
     }
@@ -39,7 +39,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
 mod tests {
 
     use super::*;
-    use actix_web::body::BoxBody;
+
     use actix_web::{
         body::to_bytes,
         http::{self},
