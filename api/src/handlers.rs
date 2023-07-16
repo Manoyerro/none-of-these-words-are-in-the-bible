@@ -26,6 +26,10 @@ fn lookup<'a>(index: usize, word: &str) -> Option<ReturnInfo<'a>> {
             start_pos: index,
             end_pos: index + word.len() - 1,
             matches: Vec::from_iter(found_word_info.iter()),
+            links: found_word_info
+                .iter()
+                .map(|item| format!("https://www.kingjamesbibleonline.org/{}-{}-{}/", item.book, item.chapter, item.verse))
+                .collect()
         }),
         None => None,
     }
@@ -85,6 +89,7 @@ mod tests {
             start_pos: 0,
             end_pos: 3,
             matches: vec![&expected_info],
+            links: Vec::new()
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
@@ -107,11 +112,13 @@ mod tests {
                 start_pos: 0,
                 end_pos: 3,
                 matches: vec![&expected_info],
+                links: Vec::new()
             },
             ReturnInfo {
                 start_pos: 5,
                 end_pos: 8,
                 matches: vec![&expected_info],
+                links: Vec::new()
             },
         ];
         let json_words = Json(test_words);
@@ -134,6 +141,7 @@ mod tests {
             start_pos: 0,
             end_pos: 3,
             matches: vec![&expected_info],
+            links: Vec::new()
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
@@ -155,6 +163,7 @@ mod tests {
             start_pos: 0,
             end_pos: 3,
             matches: vec![&expected_info],
+            links: Vec::new()
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
@@ -176,6 +185,7 @@ mod tests {
             start_pos: 0,
             end_pos: 3,
             matches: vec![&expected_info],
+            links: Vec::new()
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
