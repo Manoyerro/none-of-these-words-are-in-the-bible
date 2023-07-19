@@ -6,4 +6,5 @@ pub struct ReturnInfo<'a> {
     pub start_pos: usize,
     pub end_pos: usize,
     pub matches: Vec<&'a WordInfo>,
+    pub links: Vec<String>
 }
