@@ -1,3 +1,4 @@
+use crate::models::matchinfo::MatchInfo;
 use crate::models::returninfo::ReturnInfo;
 use crate::models::wordinfo::WordInfo;
 use crate::models::words::Words;
@@ -25,14 +26,14 @@ fn lookup<'a>(index: usize, word: &str) -> Option<ReturnInfo<'a>> {
         Some(found_word_info) => Some(ReturnInfo {
             start_pos: index,
             end_pos: index + word.len() - 1,
-            matches: Vec::from_iter(found_word_info.iter()),
-            links: found_word_info
-                .iter()
-                .map(|item| {
-                    format!(
+            matches: found_word_info
+                .into_iter()
+                .map(|item| MatchInfo {
+                    word_info: item,
+                    link: format!(
                         "https://www.kingjamesbibleonline.org/{}-{}-{}/",
                         item.book, item.chapter, item.verse
-                    )
+                    ),
                 })
                 .collect(),
         }),
