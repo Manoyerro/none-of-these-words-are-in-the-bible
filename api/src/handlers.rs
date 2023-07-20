@@ -28,8 +28,13 @@ fn lookup<'a>(index: usize, word: &str) -> Option<ReturnInfo<'a>> {
             matches: Vec::from_iter(found_word_info.iter()),
             links: found_word_info
                 .iter()
-                .map(|item| format!("https://www.kingjamesbibleonline.org/{}-{}-{}/", item.book, item.chapter, item.verse))
-                .collect()
+                .map(|item| {
+                    format!(
+                        "https://www.kingjamesbibleonline.org/{}-{}-{}/",
+                        item.book, item.chapter, item.verse
+                    )
+                })
+                .collect(),
         }),
         None => None,
     }
@@ -89,7 +94,7 @@ mod tests {
             start_pos: 0,
             end_pos: 3,
             matches: vec![&expected_info],
-            links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()]
+            links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()],
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
@@ -112,13 +117,13 @@ mod tests {
                 start_pos: 0,
                 end_pos: 3,
                 matches: vec![&expected_info],
-                links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()]
+                links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()],
             },
             ReturnInfo {
                 start_pos: 5,
                 end_pos: 8,
                 matches: vec![&expected_info],
-                links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()]
+                links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()],
             },
         ];
         let json_words = Json(test_words);
@@ -141,7 +146,7 @@ mod tests {
             start_pos: 0,
             end_pos: 3,
             matches: vec![&expected_info],
-            links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()]
+            links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()],
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
@@ -163,7 +168,7 @@ mod tests {
             start_pos: 0,
             end_pos: 3,
             matches: vec![&expected_info],
-            links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()]
+            links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()],
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
@@ -185,7 +190,7 @@ mod tests {
             start_pos: 0,
             end_pos: 3,
             matches: vec![&expected_info],
-            links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()]
+            links: vec!["https://www.kingjamesbibleonline.org/Joel-3-3/".to_string()],
         }];
         let json_words = Json(test_words);
         let resp = get_frequency(json_words).await;
