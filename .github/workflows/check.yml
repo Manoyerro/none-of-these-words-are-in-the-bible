@@ -18,5 +18,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run lint
-        run: cargo fmt
+        run: cargo fmt --check
         working-directory: ./api
