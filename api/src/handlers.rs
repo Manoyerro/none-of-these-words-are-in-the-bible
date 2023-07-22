@@ -46,8 +46,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::ops::Deref;
-
     use actix_web::{
         body::to_bytes,
         http::{self},
@@ -165,11 +163,6 @@ mod tests {
     async fn test_present_mixed_case_returns_array_of_return_info() {
         let test_words = Words {
             words: "gIrL".to_string(),
-        };
-        let expected_info = WordInfo {
-            book: "Joel".to_string(),
-            chapter: 3,
-            verse: 3,
         };
         let expected_output: Vec<ReturnInfo> = vec![ReturnInfo {
             start_pos: 0,
