@@ -4,9 +4,3 @@ use serde::{Deserialize, Serialize};
 pub struct Words {
     pub words: String,
 }
-
-impl Words {
-    pub fn from_text(text: String) -> Self {
-        Words { words: text }
-    }
-}
