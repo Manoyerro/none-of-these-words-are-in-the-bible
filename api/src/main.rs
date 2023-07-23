@@ -2,16 +2,12 @@ mod handlers;
 mod models;
 mod parser;
 
-use actix_web::{get, middleware, App, HttpResponse, HttpServer, Responder};
+use actix_web::{middleware, App, HttpServer};
 use std::env;
-
-#[get("/hello")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello, world")
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let port = env::var("PORT").unwrap_or_default().parse().unwrap_or(8000);
     env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
     env_logger::init();
 
@@ -19,9 +15,8 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(middleware::Logger::default())
             .configure(handlers::config)
-            .service(hello)
     })
-    .bind(("127.0.0.1", 8000))?
+    .bind(("127.0.0.1", port))?
     .run()
     .await
 }
