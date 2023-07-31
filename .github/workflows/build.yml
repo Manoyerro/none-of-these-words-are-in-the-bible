@@ -46,3 +46,4 @@ jobs:
         with:
           service: backend
           image: europe-west2-docker.pkg.dev/none-of-the-words/none-of-these-words-are-in-the-bible/backend:latest
+          region: europe-north1
