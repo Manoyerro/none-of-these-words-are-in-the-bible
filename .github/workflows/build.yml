@@ -40,3 +40,4 @@ jobs:
           tags: europe-west2-docker.pkg.dev/none-of-the-words/backend:latest
           file: api/Dockerfile
           context: api
+          provenance: false
