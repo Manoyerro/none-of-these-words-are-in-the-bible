@@ -40,3 +40,9 @@ jobs:
           tags: europe-west2-docker.pkg.dev/none-of-the-words/none-of-these-words-are-in-the-bible/backend:latest
           file: api/Dockerfile
           context: api
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          service: backend
+          image: europe-west2-docker.pkg.dev/none-of-the-words/none-of-these-words-are-in-the-bible/backend:latest
