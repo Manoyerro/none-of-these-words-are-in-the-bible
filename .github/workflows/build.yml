@@ -37,7 +37,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: europe-west2-docker.pkg.dev/none-of-the-words/backend:latest
+          tags: europe-west2-docker.pkg.dev/none-of-the-words/none-of-these-words-are-in-the-bible/backend:latest
           file: api/Dockerfile
           context: api
-          provenance: false
