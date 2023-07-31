@@ -37,6 +37,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: europe-west2-docker.pkg.dev/none-of-the-words/backend:latest
+          tags: europe-west-2-docker.pkg.dev/none-of-the-words/backend:latest
           file: api/Dockerfile
           context: api
