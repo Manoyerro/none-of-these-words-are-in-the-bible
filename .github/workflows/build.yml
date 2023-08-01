@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - api-docker
 jobs:
   docker:
     name: Build and deploy backend Docker image
